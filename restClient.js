@@ -1,7 +1,5 @@
 'use strict'
-
 const rp = require('request-promise')
-
 let getClases = () => {
   return rp('https://us-central1-prime-principle-243417.cloudfunctions.net/clase')
   .then(response => {
@@ -32,12 +30,14 @@ let datesCasification = () => {
   })
 }
 
-let clasification = clase => {
+let clasification = clase => from => to => {
   let options = {
     method: 'POST',
     uri: 'https://us-central1-prime-principle-243417.cloudfunctions.net/clasification',
     body: {
-      clase
+      clase,
+      from,
+      to
     },
     json: true
   };
@@ -50,8 +50,6 @@ let clasification = clase => {
         return err
     })
 }
-
-
 
 module.exports = {
   getClases,
