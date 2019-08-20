@@ -5,6 +5,7 @@ const { dates } = require('./utils')
 const pubsub = new PubSub()
 const subscriptionName = 'subscription-table-creation'
 const timeout = 30
+process.env.GOOGLE_APPLICATION_CREDENTIALS="/home/mrivera/GC/gc.json"
 
 const subscription = pubsub.subscription(subscriptionName)
 
