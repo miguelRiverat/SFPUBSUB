@@ -18,20 +18,19 @@ const messageHandler = async message => {
   message.ack()
   
   let [from, to] = dates(message.data)
-  //let clases = JSON.parse(await getClases())
-  //for (let ii = 0 ; ii < clases.length ; ii++) {
+  let clases = JSON.parse(await getClases())
+  for (let ii = 0 ; ii < clases.length ; ii++) {
   //for (let ii = 0 ; ii < 1 ; ii++) {
-    let clase = 'J01E' // clases[ii].clase
+    let clase = clases[ii].clase
     console.log('Start Clasification K-MEANS for: ', clase, from, to)
     let clasResult = await clasification(clase)(from)(to)
     console.log('END Clasification K-MEANS for: ', clase, from, to, clasResult)
-  //}
-  console.log('Clasification DATES')
-  let datesClas = await datesCasification()
-  console.log('Clasification TENDS', datesClas)
-  let compare = await compareClasification()
-  console.log('END', compare)
-  
+    console.log('Clasification DATES')
+    let datesClas = await datesCasification()
+    console.log('Clasification TENDS', datesClas)
+    let compare = await compareClasification()
+    console.log('END', compare)
+  }
 }
 
 subscription.on(`message`, messageHandler);
