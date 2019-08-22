@@ -1,16 +1,25 @@
 // Imports the Google Cloud client library
 const { PubSub } = require('@google-cloud/pubsub');
-const { getClases, clasification, datesCasification, compareClasification } = require('./restClient')
+const { getClases, getMolec, clasification, datesCasification, compareClasification } = require('./restClient')
+const { clasification: clasic } = require('./clasifications')
 const { dates } = require('./utils')
 const pubsub = new PubSub()
 const subscriptionName = 'subscription-table-creation'
 const timeout = 30
-process.env.GOOGLE_APPLICATION_CREDENTIALS="/home/mrivera/GC/gc.json"
+//process.env.GOOGLE_APPLICATION_CREDENTIALS="/home/mrivera/GC/gc.json"
 
 const subscription = pubsub.subscription(subscriptionName)
 
 let messageCount = 0;
 const messageHandler = async message => {
+
+  const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
+  console.log('mensaje reci')
+  await sleep(90000)
+  console.log('iniciando')
+
   console.log(`Received message ${message.id}:`)
   console.log(`\tData: ${message.data}`)
   console.log(`\tAttributes: ${message.attributes}`)
@@ -18,19 +27,24 @@ const messageHandler = async message => {
   message.ack()
   
   let [from, to] = dates(message.data)
-  let clases = JSON.parse(await getClases())
-  for (let ii = 0 ; ii < clases.length ; ii++) {
+  let clases = ["J01K","J01B","J01D","J01F","J01G","J01C","J01E","J01H"] //JSON.parse(await getClases())
+
+  //for (let ii = 0 ; ii < clases.length ; ii++) {
   //for (let ii = 0 ; ii < 1 ; ii++) {
-    let clase = clases[ii].clase
+    let clase = 'J01C' //clases[ii] //clases[ii].clase
     console.log('Start Clasification K-MEANS for: ', clase, from, to)
-    let clasResult = await clasification(clase)(from)(to)
-    console.log('END Clasification K-MEANS for: ', clase, from, to, clasResult)
-    console.log('Clasification DATES')
+    let clasResult = await clasic(clase, from, to)
+    console.log('END Clasification K-MEANS for: ', clase, from, to)
+  //}
+
+  //let moleculas = await getMolec()
+  /*for (let ii = 0 ; ii < moleculas.length ; ii++) {
+    let molecula = moleculas[ii]     
     let datesClas = await datesCasification()
-    console.log('Clasification TENDS', datesClas)
-    let compare = await compareClasification()
-    console.log('END', compare)
-  }
+    console.log('Dates', datesClas)
+    let compare = await compareClasification(from, to, molecula)
+    console.log('Compare', compare)
+  }*/
 }
 
 subscription.on(`message`, messageHandler);

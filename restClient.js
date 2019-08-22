@@ -10,8 +10,18 @@ let getClases = () => {
   })
 }
 
-let compareClasification = () => {
-  return rp('https://us-central1-prime-principle-243417.cloudfunctions.net/compare')
+let getMolec = () => {
+  return rp('https://us-central1-prime-principle-243417.cloudfunctions.net/clase?tipo=true')
+  .then(response => {
+      return response
+  })
+  .catch(err => {
+      return err
+  })
+}
+
+let compareClasification = (from, to, molecula) => {
+  return rp(`https://us-central1-prime-principle-243417.cloudfunctions.net/compare?from=${from}&to=${to}&molecula=${molecula}`)
   .then(response => {
       return response
   })
@@ -52,6 +62,7 @@ let clasification = clase => from => to => {
 }
 
 module.exports = {
+  getMolec,
   getClases,
   clasification,
   datesCasification,
